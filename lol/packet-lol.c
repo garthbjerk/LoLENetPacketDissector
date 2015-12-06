@@ -1,5 +1,4 @@
 #include "config.h"
-//#include "moduleinfo.h"
 #include <epan/packet.h>
 #include "packet-lol.h"
 
@@ -9,8 +8,6 @@
 
 static int proto_lol = -1;
 
-//byte key[16];
-//gboolean isKey = FALSE;
 
 void proto_register_lol(void);
 void proto_reg_handoff_lol(void);
@@ -129,7 +126,7 @@ static void parse_packet_throttle(tvbuff_t*, proto_tree*);
 
 
 
-//made this because of some weird hex 
+//made this because of hex 
 static const value_string hcommands[] = {
         { 0, "NONE" },
         { 1, "ACKNOWLEDGE" },
@@ -256,8 +253,7 @@ static void dissect_lol(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree)
    
     if (tree) {
         gint offset = 0;
-        //guint8 cmand = 0;
-         proto_tree *lol_tree = NULL;
+        proto_tree *lol_tree = NULL;
         proto_item *ti = NULL;
         proto_item *pheader = NULL;
         proto_tree *proto_header = NULL;
@@ -413,11 +409,7 @@ static void parse_disconnect(tvbuff_t *tvb, proto_tree *tree)
 
 static void parse_ping(tvbuff_t *tvb, proto_tree *tree)
 {
-    //proto_item *ping_buf = NULL;
-    //proto_tree *ping_tree = NULL;
     proto_tree_add_item(tree, hf_enet_ping, tvb, 0, -1, ENC_NA);
-    //ping_buf = proto_tree_add_item(tree, hf_enet_ping, tvb, 0, -1, ENC_NA);
-    //ping_tree = proto_item_add_subtree(ping_buf, ett_enet_ping);
 }
 
 static void parse_reliable(tvbuff_t *tvb, proto_tree *tree, packet_info *pinfo)
@@ -427,10 +419,8 @@ static void parse_reliable(tvbuff_t *tvb, proto_tree *tree, packet_info *pinfo)
 
     buf = proto_tree_add_item(tree, hf_enet_reliable, tvb, 0, -1, ENC_NA);
     reliable_tree = proto_item_add_subtree(buf, ett_enet_reliable);
-
     proto_tree_add_item (reliable_tree, hf_enet_payload_length, tvb, 0, 2, ENC_BIG_ENDIAN);
 
-    //need to make tvb start at range 2 use another var?
     decode_payload(tvb, reliable_tree, pinfo, 2);
 
 }
@@ -446,7 +436,6 @@ static void parse_unreliable(tvbuff_t *tvb, proto_tree *tree, packet_info *pinfo
     proto_tree_add_item (unreliable_tree, hf_enet_unreliable_seqnum, tvb, 0, 2, ENC_BIG_ENDIAN);
     proto_tree_add_item (unreliable_tree, hf_enet_payload_length, tvb, 2, 2, ENC_BIG_ENDIAN);
 
-    //needs to start at tvb 4 use another var?
     decode_payload(tvb, unreliable_tree, pinfo, 4);
 }
 
@@ -520,11 +509,7 @@ static void decode_payload (tvbuff_t *tvb, proto_tree *tree, packet_info *pinfo,
     //exit out
 
     //if key then add b64key with b64keyfile
-
-    //proto_tree_add_item (lol_tree, hf_enet_data_length, tvb, offset, -1, ENC_BIG_ENDIAN);
-
-    
-
+0
     proto_tree_add_item (lol_tree, hf_enet_payload, tvb, offset, -1, ENC_BIG_ENDIAN);
 
 
